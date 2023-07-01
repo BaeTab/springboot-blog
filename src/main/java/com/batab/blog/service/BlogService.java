@@ -4,6 +4,7 @@ import com.batab.blog.domain.Article;
 import com.batab.blog.domain.LikedUser;
 import com.batab.blog.dto.AddArticleRequest;
 import com.batab.blog.dto.UpdateArticleRequest;
+import com.batab.blog.dto.UpdatedArticleResponse;
 import com.batab.blog.repository.BlogRepository;
 import com.batab.blog.repository.LikedUserRepository;
 import jakarta.transaction.Transactional;
@@ -54,7 +55,7 @@ public class BlogService {
     }
 
     @Transactional
-    public Article update(long id, UpdateArticleRequest request, String currentUserEmail) {
+    public UpdatedArticleResponse update(long id, UpdateArticleRequest request, String currentUserEmail) {
         Article article = blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
 
@@ -62,10 +63,14 @@ public class BlogService {
             throw new AccessDeniedException("Unauthorized to edit this article.");
         }
 
-        article.setTitle(request.getTitle());
-        article.setContent(request.getContent());
+        Article updatedArticle = blogRepository.save(article);
 
-        return article;
+        UpdatedArticleResponse response = new UpdatedArticleResponse();
+        response.setId(updatedArticle.getId());
+        response.setTitle(updatedArticle.getTitle());
+        response.setContent(updatedArticle.getContent());
+
+        return response;
     }
 
     @Transactional

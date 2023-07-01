@@ -2,10 +2,7 @@ package com.batab.blog.controller;
 
 import com.batab.blog.domain.Article;
 import com.batab.blog.domain.LikedUser;
-import com.batab.blog.dto.AddArticleRequest;
-import com.batab.blog.dto.ArticleResponse;
-import com.batab.blog.dto.LikeRequest;
-import com.batab.blog.dto.UpdateArticleRequest;
+import com.batab.blog.dto.*;
 import com.batab.blog.repository.LikedUserRepository;
 import com.batab.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
@@ -51,9 +48,9 @@ public class BlogApiController {
     }
 
     @PutMapping("/api/articles/{id}")
-    public ResponseEntity<Article> updateArticle(@PathVariable long id, @RequestBody UpdateArticleRequest request, Authentication authentication) {
+    public ResponseEntity<UpdatedArticleResponse> updateArticle(@PathVariable long id, @RequestBody UpdateArticleRequest request, Authentication authentication) {
         String currentUserEmail = authentication.getName();
-        Article updatedArticle = blogService.update(id, request, currentUserEmail);
+        UpdatedArticleResponse updatedArticle = blogService.update(id, request, currentUserEmail);
 
         return ResponseEntity.ok()
                 .body(updatedArticle);

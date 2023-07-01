@@ -50,7 +50,6 @@ public class Article {
     private List<Comment> comments = new ArrayList<>();
 
 
-
     @Builder
     public Article(String title, String content, String author) {
         this.title = title;
@@ -62,7 +61,6 @@ public class Article {
         this.title = title;
         this.content = content;
     }
-
 
     public String getAuthor() {
         return author;
