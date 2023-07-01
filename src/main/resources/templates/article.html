@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>블로그 글</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+
+  <style>
+    .section-border {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .comments-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .comment-item {
+      margin-bottom: 10px;
+    }
+
+    .comment-author {
+      font-weight: bold;
+    }
+
+    .comment-content {
+      margin-top: 5px;
+    }
+    .ok-button{
+      display: flex;
+      justify-content: end;
+    }
+    /* 네비게이션 바 스타일 */
+    .navbar {
+      background-color: #333;
+    }
+    .navbar-brand {
+      color: #fff;
+      font-weight: bold;
+    }
+    .navbar-toggler-icon {
+      background-color: #fff;
+    }
+    .navbar-nav {
+      margin-left: auto;
+    }
+    /* 검색 및 로그아웃 버튼 스타일 */
+    #search-input {
+      width: 200px;
+      margin-right: 3px;
+    }
+    #logout-btn {
+      margin-left: 20px;
+    }
+
+    /* 헤더 영역 스타일 */
+
+    .header h4 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    /* 글 목록 테이블 스타일 */
+    .table th {
+      text-align: center;
+    }
+    .table td {
+      vertical-align: middle;
+    }
+    .table td div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .table td a {
+      color: #5d65b4; /* 링크색상 */
+      text-decoration: none; /* 밑줄 삭제 */
+    }
+    .badge {
+      position: relative;
+      margin-left: 5px;
+      font-size: 12px;
+    }
+
+    /* 페이지네이션 스타일 */
+    .pagination {
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .pagination .page-item {
+      margin: 0 5px;
+    }
+    .pagination .page-link {
+      color: #333;
+    }
+    .pagination .page-item.active .page-link {
+      background-color: #333;
+      border-color: #333;
+      color: #fff;
+    }
+    #like-btn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+    .custom-btn {
+        position: absolute;
+        margin-bottom: 0;
+    }
+    .comment-content {
+        font-size: small;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .comment-content span {
+        flex: 1;
+    }
+
+    .delete-comment-btn {
+        font-size: xx-small;
+        margin-left: 5px;
+        padding: 0 5px;
+    }
+
+  </style>
+</head>
+<body>
+<!--nav bar 시작-->
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/articles">블로그인가?<br><p class="mb-3" style="color: white" th:text="${truncatedAuthor + '님 접속'}"></p></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      </ul>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between mb-3">
+      <form class="d-flex" role="search" th:action="@{/articles}" method="get">
+      <input id="search-input" class="form-control me-2" type="search" placeholder="제목,내용" aria-label="Search" name="keyword">
+      <button class="btn btn-outline-success ml-2" type="submit">Search</button>
+    </form>
+    <button id="logout-btn"type="button" class="btn btn-danger btn-sm"  onclick="location.href='/logout'">로그아웃</button>
+  </div>
+</nav>
+<!--nav bar 끝-->
+
+<!-- 본문 페이지 -->
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+<!--      수정 삭제 버튼    -->
+      <div class="mb-2 ok-button">
+      <button type="button" id="modify-btn"
+              th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.id})}'|"
+              style="font-size: small; margin-right: 5px; " class="btn btn-primary btn-sm "
+              th:disabled="${article.author != email}">수정</button>
+      <button type="button" id="delete-btn"
+              style="font-size: small" class="btn btn-danger btn-sm"
+              th:disabled="${article.author != email}">삭제</button>
+      </div>
+      <article>
+          <input type="hidden" id="article-id" th:value="${article.id}">
+        <header class="mb-3 section-border">
+          <h4 class="fw-bolder mb-1" th:text="${article.title}"></h4>
+          <div class="text-muted fst-italic mb-2" th:text="|작성일자 ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}|"></div>
+            <section class="mb-5 article-content" style="position: relative;">
+                <p class="fs-5 mb-4" th:utext="${contentWithLineBreaks}"></p>
+                <button class="btn btn-secondary custom-btn btn-sm" style="float: none" onclick="history.go(-1)">이전 페이지</button>
+                <button type="button" id="like-btn" class="btn btn-sm btn-primary position-relative mr-2" style="float: right" th:onclick="|likeArticle('${article.id}')|">
+                    좋아요
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+      <span id="like-count" class="visually-hidden" th:text="${article.likeCount}">개</span>
+    </span>
+                </button>
+            </section>
+            <div>
+
+            </div>
+        </header>
+
+        <!-- 댓글 작성후 나오는 페이지 -->
+        <strong>Comment</strong>
+          <div class="section-border">
+              <div class="comments-list">
+                  <div th:each="comment : ${article.comments}" class="comment-item" data-comment-id="${comment.id}">
+                      <div>
+                          <strong th:text="${#strings.substringBefore(comment.author, '@')}" style="font-size: small"></strong>
+                        (<span class="comment-date" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}" style="font-size: small; color: gray;"></span>)
+
+                      </div>
+
+                      <div class="comment-content" style="font-size: small">
+                          <div class="d-flex justify-content-between mb-1">
+                              <span th:text="${comment.content}"></span>
+                              <button type="button" class="delete-comment-btn btn btn-danger btn-sm ml-2"
+                                      th:if="${comment.author == email}"
+                                      th:onclick="|deleteComment('${comment.id}')|">x</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        <!-- 댓글 작성 폼 -->
+        <form th:action="@{/articles/{id}/comments(id=${article.id})}" method="post" class="mt-4">
+          <div class="form-group">
+            <input type="hidden" name="author" th:value="${truncatedAuthor}" />
+            <textarea id="commentInput" name="content" class="form-control" placeholder="댓글을 입력해주세요" required></textarea>
+          </div>
+          <div class="ok-button mb-1 ">
+          <button type="submit" class=" btn btn-primary btn-sm " >확인</button>
+          </div>
+        </form>
+
+      </article>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // 게시글에 대해 좋아요 누른 유저 배열
+    let likedUserArticles = [];
+
+    function likeArticle(articleId) {
+        // 로그인 유저 이메일 가져오기
+        let userEmail = "${email}";
+        // 유저 체크 하는 메서드
+        let hasLiked = checkUserLikedArticle(articleId);
+        // 이미 누른 사용자면 못누름
+        if (hasLiked) {
+            return;
+        }
+        // 좋아요 버튼 비활성화
+        $('#like-btn').prop('disabled', true);
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/articles/' + articleId + '/like',
+            data: JSON.stringify({ email: userEmail }),
+            contentType: 'application/json',
+            success: function() {
+                // 좋아요 +1
+                let currentCount = parseInt($('#like-count').text());
+                $('#like-count').text(currentCount + 1);
+
+
+                $('.like-btn-' + articleId).prop('disabled', true);
+                $('.like-btn-' + articleId).removeClass('btn-primary');
+                $('.like-btn-' + articleId).addClass('btn-secondary');
+
+                // 배열에 추가
+                likedUserArticles.push(articleId);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                //에러면 다시 활성화
+                $('#like-btn').prop('disabled', false);
+            }
+        });
+    }
+    function checkUserLikedArticle(articleId) {
+        return likedUserArticles.includes(articleId);
+    }
+</script>
+<script>
+    function deleteComment(commentId) {
+        if (confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
+            const articleId = document.getElementById('article-id').value;
+
+            fetch(`/articles/${articleId}/comments/${commentId}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Find the comment element and remove it from the DOM
+                        const commentElement = document.querySelector(`.comment-item[data-comment-id="${commentId}"]`);
+                        if (commentElement) {
+                            commentElement.remove();
+                        }
+                        window.location.href = `/articles/${articleId}`;
+
+                    } else {
+                        alert('댓글 삭제에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('댓글 삭제 중 오류가 발생했습니다.', error);
+                    alert('댓글 삭제에 실패했습니다.');
+                });
+        }
+    }
+</script>
+<script src="/js/article.js"></script>
+</body>
+</html>
