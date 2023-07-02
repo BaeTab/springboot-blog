@@ -63,7 +63,7 @@ public class BlogService {
         if (!article.getAuthor().equals(currentUserEmail)) {
             throw new AccessDeniedException("Unauthorized to edit this article.");
         }
-
+        article.update(request.getTitle(), request.getContent());
         Article updatedArticle = blogRepository.save(article);
 
         UpdatedArticleResponse response = new UpdatedArticleResponse();
