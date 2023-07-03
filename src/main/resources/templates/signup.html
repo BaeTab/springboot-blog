@@ -72,12 +72,35 @@
   <form th:action="@{/user}" method="POST" name="signupForm" onsubmit="return validateForm()">
     <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}"/>
     <div class="inputBox">
-      <input  type="email" name="username" placeholder="Email 주소">
+      <input  type="email" name="email" placeholder="Email 주소">
       <input  type="password" name="password" placeholder="비밀번호">
     </div>
     <input type="submit" name="" value="회원가입">
   </form>
 
 </div>
+<script>
+  function validateForm() {
+    let email = document.forms["signupForm"]["email"].value;
+    let password = document.forms["signupForm"]["password"].value;
+
+    if (email === "" && password.length < 4) {
+      alert("이메일 주소와 비밀번호 4자리 이상 입력해 주세요!");
+      window.location.href = "/signup";
+      return false;
+    } else if (email === "") {
+      alert("이메일 주소를 확인해 주세요!");
+      window.location.href = "/signup";
+      return false;
+    } else if (password.length < 4) {
+      alert("비밀번호를 4자리 이상 입력해 주세요!");
+      window.location.href = "/signup";
+      return false;
+    } else {
+      alert("회원가입이 완료되었습니다. 로그인해주세요!");
+      return true;
+    }
+  }
+</script>
 </body>
 </html>
