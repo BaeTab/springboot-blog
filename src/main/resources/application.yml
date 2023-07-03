@@ -16,12 +16,13 @@ spring:
   mail:
     host: smtp.naver.com
     port: 465
-    username: b_h_woo
+    username: b_h_woo@naver.com
     password: KG5DSJ5ZPDD4
-    smtp:
-      auth: true
-      starttls:
-        enable: true
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.ssl.trust: smtp.naver.com
+      mail.smtp.starttls.enable: true
   servlet:
     multipart:
       max-file-size: 10MB

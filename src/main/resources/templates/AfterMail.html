@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+  <style>
+    /* 네비게이션 바 스타일 */
+    .navbar {
+      background-color: #333;
+    }
+    .navbar-brand {
+      color: #fff;
+      font-weight: bold;
+    }
+    .navbar-toggler-icon {
+      background-color: #fff;
+    }
+    .navbar-nav {
+      margin-left: auto;
+    }
+    /* 검색 및 로그아웃 버튼 스타일 */
+    #search-input {
+      width: 200px;
+      margin-right: 3px;
+    }
+    #logout-btn {
+      margin-left: 20px;
+    }
+    body {
+      margin: 0;
+      background-color: #F9F9F9;
+      font-family: Helvetica Nue, sans-serif;
+    }
+    #wrap {
+      width: 600px;
+      margin: 0 auto;
+      padding-top: 100px;
+    }
+
+    .box1 {
+      padding: 25px;
+      background-color: #F9F9F9;
+      border-radius: 5px;
+      box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
+    }
+
+    .form {
+      margin: auto;
+    }
+
+    input, textarea {
+      width: 200px;
+      padding: 9px;
+      outline: 0;
+      border: solid 1px #E5E5E5;
+      background-color: #FFFFFF;
+      box-shadow: rgba(0,0,0, 0.1) 0px 0px 8px;
+    }
+
+    textarea {
+      width: 530px; max-width: 530px;
+      height: 150px;
+      line-height: 150%;
+      font-size: 14px;
+      color: #D7D7D7;
+    }
+
+    input:hover, textarea:hover,
+    input:focus, textarea:focus {
+      border-color: #C9C9C9;
+    }
+
+    .text textarea:focus {
+      color: #000;
+    }
+
+    .form label {
+      margin-left: 10px;
+      color: #999999;
+    }
+
+    .submit input {
+      width: 100px;
+      padding: 9px 15px;
+      font-size: 14px;
+      color: #FFFFFF;
+      background-color: #11A7F2;
+      border: 0;
+      border-radius: 2px;
+    }
+
+    .submit input:hover {
+      cursor: pointer;
+      background-color: #1281B8;
+    }
+  </style>
+</head>
+<body>
+<!--nav bar 시작-->
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/articles">블로그인가?<br></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      </ul>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between mb-3">
+    <form class="d-flex" role="search" th:action="@{/articles}" method="get">
+      <input id="search-input" class="form-control me-2" type="search" placeholder="제목,내용" aria-label="Search" name="keyword">
+      <button class="btn btn-outline-success ml-2" type="submit">Search</button>
+    </form>
+    <button id="logout-btn"type="button" class="btn btn-danger btn-sm"  onclick="location.href='/logout'">로그아웃</button>
+  </div>
+</nav>
+<!--nav bar 끝-->
+<div id="wrap">
+  <div class="box1">
+    <h1 style="text-align: center; color: #4f4ff5" class="mb-5">Contact</h1>
+    <form class="form" th:action="@{/mail/send}" method="post"onsubmit="showAlert()">
+      <p class="Cell Phone">
+        <input type="hidden" name="address" id="email" value="bhwoo48@gmail.com"/>
+      </p>
+      <p class="email">
+        <input type="email" name="title" id="title" placeholder="Email 주소" />
+        <label for="email">회신 가능한 E-mail</label>
+      </p>
+      <p class="text">
+        <textarea name="content" placeholder="메시지를 적어주세요"></textarea>
+      </p>
+      <p class="submit">
+        <input type="submit" value="전송" />
+      </p>
+    </form>
+  </div>
+</div> <!--wrap-->
+<script>
+  function showAlert() {
+    alert("전송이 완료되었습니다!");
+  }
+</script>
+</body>
+</html>

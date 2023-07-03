@@ -18,7 +18,4 @@ public class MyBlogApplication {
     public String uploadPath() {
         return "d:/image/";
     }
-
-
-
 }
