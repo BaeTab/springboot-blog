@@ -24,6 +24,8 @@ public class MailController {
     public String sendMail(MailDto mailDto) {
         emailService.sendSimpleMessage(mailDto);
         System.out.println("메일 전송 완료");
+
         return "AfterMail.html";
     }
+
 }
