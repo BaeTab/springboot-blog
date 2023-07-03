@@ -2,65 +2,82 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>회원 가입</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-
+  <title>Title</title>
   <style>
-    .gradient-custom {
-      background: linear-gradient(to right, rgba(254, 238, 229, 1), rgba(229, 193, 197, 1))
+    body{margin: 0;padding: 0;
+      background: url(https://i.ibb.co/VQmtgjh/6845078.png) no-repeat;
+      height: 100vh;font-family: sans-serif;background-size: cover;
+      background-repeat: no-repeat;background-position: center;
+      overflow: hidden}
+
+    @media screen and (max-width: 600px) {
+      body{background-size: cover;: fixed}
     }
+
+    #particles-js{
+      height: 100%}
+
+    .loginBox{
+      position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);
+      width: 350px;min-height: 200px;background: #000000;
+      border-radius: 10px;padding: 40px;box-sizing: border-box}
+
+    .user{
+      margin: 0 auto;display: block;margin-bottom: 20px
+    }
+
+    h3{
+      margin: 0;padding: 0 0 20px;color: #59238F;text-align: center
+    }
+
+    .loginBox input{
+      width: 100%;margin-bottom: 20px}
+
+    .loginBox input[type="email"],
+    .loginBox input[type="password"]{
+      border: none;border-bottom: 2px solid #262626;outline: none;
+      height: 40px;color: #fff;background: transparent;font-size: 16px;
+      padding-left: 20px;box-sizing: border-box}
+
+    .loginBox input[type="email"]:hover,
+    .loginBox input[type="password"]:hover{
+      color: #42F3FA;border: 1px solid #42F3FA;
+      box-shadow: 0 0 5px rgba(0,255,0,.3), 0 0 10px
+      rgba(0,255,0,.2), 0 0 15px rgba(0,255,0,.1), 0 2px 0 black}
+
+    .loginBox input[type="text"]:focus,
+    .loginBox input[type="password"]:focus{
+
+      border-bottom: 2px solid #42F3FA}
+
+    .inputBox{position: relative}
+    .inputBox span{
+      position: absolute;top: 10px;color: #262626}
+    .loginBox input[type="submit"]{
+      border: none;outline: none;height: 40px;font-size: 16px;
+      background: #59238F;color: #fff;border-radius: 20px;
+      cursor: pointer}
+
+    .loginBox a{color: #262626;font-size: 14px;
+      font-weight: bold;text-decoration: none;
+      text-align: center;display: block}
+
+    a:hover{color: #00ffff}p{color: #0000ff}
   </style>
 </head>
-<body class="gradient-custom">
-<section class="d-flex vh-100">
-  <div class="container-fluid row justify-content-center align-content-center">
-    <div class="card bg-dark" style="border-radius: 1rem;">
-      <div class="card-body p-5 text-center">
-        <h2 class="text-white">SIGN UP</h2>
-        <p class="text-white-50 mt-2 mb-5">서비스 사용을 위한 회원 가입</p>
-        <div class = "mb-2">
-          <form th:action="@{/user}" method="POST" name="signupForm" onsubmit="return validateForm()">
-
-            <!-- 토큰을 추가하여 CSRF 공격 방지 -->
-            <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
-            <div class="mb-3">
-              <label class="form-label text-white">Email 주소</label>
-              <input type="email" class="form-control" name="email">
-            </div>
-            <div class="mb-3">
-              <label class="form-label text-white">비밀번호</label>
-              <input type="password" class="form-control" name="password">
-            </div>
-
-            <button type="submit" class="btn btn-primary">회원가입</button>
-          </form>
-        </div>
-      </div>
+<body>
+<div class="loginBox">
+  <img class="user" src="https://i.ibb.co/yVGxFPR/2.png" height="100px" width="100px">
+  <h3>회원 가입</h3>
+  <form th:action="@{/user}" method="POST" name="signupForm" onsubmit="return validateForm()">
+    <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}"/>
+    <div class="inputBox">
+      <input  type="email" name="username" placeholder="Email 주소">
+      <input  type="password" name="password" placeholder="비밀번호">
     </div>
-  </div>
-</section>
-<script>
-  function validateForm() {
-    let email = document.forms["signupForm"]["email"].value;
-    let password = document.forms["signupForm"]["password"].value;
+    <input type="submit" name="" value="회원가입">
+  </form>
 
-    if (email === "" && password.length < 4) {
-      alert("이메일 주소와 비밀번호 4자리 이상 입력해 주세요!");
-      window.location.href = "/signup";
-      return false;
-    } else if (email === "") {
-      alert("이메일 주소를 확인해 주세요!");
-      window.location.href = "/signup";
-      return false;
-    } else if (password.length < 4) {
-      alert("비밀번호를 4자리 이상 입력해 주세요!");
-      window.location.href = "/signup";
-      return false;
-    } else {
-      alert("회원가입이 완료되었습니다. 로그인해주세요!");
-      return true;
-    }
-  }
-</script>
+</div>
 </body>
 </html>
